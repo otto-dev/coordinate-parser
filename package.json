@@ -1,0 +1,15 @@
+{
+  "name": "coordinate-parser",
+  "version": "0.1.0",
+  "description": "Coordinate string parser",
+  "main": "index.coffee",
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://git.weprog.com/ig/coordinate-parser.git"
+  },
+  "author": "WEPROG/otto-dev",
+  "license": "Apache-2.0"
+}
