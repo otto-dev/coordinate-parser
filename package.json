@@ -11,5 +11,8 @@
     "url": "http://git.weprog.com/ig/coordinate-parser.git"
   },
   "author": "WEPROG/otto-dev",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "chai": "^3.4.0"
+  }
 }
