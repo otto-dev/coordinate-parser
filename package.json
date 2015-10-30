@@ -11,5 +11,8 @@
     "url": "http://git.weprog.com/ig/coordinate-parser.git"
   },
   "author": "WEPROG",
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "chai": "^3.4.0"
+  }
 }
