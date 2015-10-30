@@ -1,4 +1,5 @@
 Parser = require('../parser.coffee')
+expect = require('chai').expect
 
 expectation =
     result: [40.4183318, -74.6411133]
@@ -59,18 +60,17 @@ describe "Parser", ->
     it "converts strings correctly to decimal latitude/longitude", ->
         parser = new Parser
 
-        [expectedLatitude, expectedLongitude] = expectation.result
-        for format in expectation.formats
-            [latitude, longitude] = parser.stringToCoordinates(format)
+        for currentExpectation in [expectation, reversedExpectation]
+            [expectedLatitude, expectedLongitude] = currentExpectation.result
+            for format in currentExpectation.formats
+                [latitude, longitude] = parser.fromString(format)
 
-            expect(latitude).to.be.closeTo(expectedLatitude, 0.01)
-            expect(longitude).to.be.closeTo(expectedLongitude, 0.01)
-
-        [expectedLatitude, expectedLongitude] = reversedExpectation.result
-        for format in reversedExpectation.formats
-            [latitude, longitude] = parser.stringToCoordinates(format)
-
-            expect(latitude).to.be.closeTo(expectedLatitude, 0.01)
-            expect(longitude).to.be.closeTo(expectedLongitude, 0.01)
+                try
+                    expect(latitude).to.be.closeTo(expectedLatitude, 0.01)
+                    expect(longitude).to.be.closeTo(expectedLongitude, 0.01)
+                catch error
+                    console.log('Failed ', format)
+                    console.log([latitude, longitude])
+                    throw error
         
     
