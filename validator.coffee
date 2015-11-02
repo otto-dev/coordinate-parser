@@ -8,6 +8,7 @@ class Validator
             isValid = no
             return isValid
 
+
     validate: (coordinates) ->
         @checkContainsNoLetters(coordinates)
         @checkValidOrientation(coordinates)

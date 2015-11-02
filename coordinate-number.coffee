@@ -17,9 +17,9 @@ class CoordinateNumber
         if @degreesCanBeSpecial()
             if @degreesCanBeMilliseconds()
                 @degreesAsMilliseconds()
-            if @degreesCanBeDegreesMinutesAndSeconds()
+            else if @degreesCanBeDegreesMinutesAndSeconds()
                 @degreesAsDegreesMinutesAndSeconds()
-            if @degreesCanBeDegreesAndMinutes()
+            else if @degreesCanBeDegreesAndMinutes()
                 @degreesAsDegreesAndMinutes()
 
 
