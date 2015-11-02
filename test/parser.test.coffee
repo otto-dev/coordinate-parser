@@ -55,22 +55,64 @@ reversedExpectation =
         "-40° 25.0999, 74° 38.4668"
     ]
 
+invalidFormats = [
+    "blablabla"
+    "5 Fantasy street 12"
+    "-40.1X, 74"
+    "-40.1 X, 74"
+    "-40.1, 74X"
+    "-40.1, 74 X"
+    "1 2 3 4 5 6 7 8"
+    "1 2 3 4 5 6 7"
+    "1 2 3 4 5"
+    "1 2 3 "
+    "1"
+    "40.1° SS 60.1° EE"
+    "40.1° E 60.1° S"
+    "40.1° W 60.1° N"
+    "40.1° W 60.1° W"
+    "40.1° N 60.1° N"
+    "-40.4183318, 12.345, 74.6411133"
+]
 
 describe "Parser", ->
-    it "converts strings correctly to decimal latitude/longitude", ->
-        parser = new Parser
+    describe "fromString(coordinates)", ->
+            
+        it "converts strings correctly to decimal latitude/longitude", ->
+            parser = new Parser
 
-        for currentExpectation in [expectation, reversedExpectation]
-            [expectedLatitude, expectedLongitude] = currentExpectation.result
-            for format in currentExpectation.formats
-                [latitude, longitude] = parser.fromString(format)
+            for currentExpectation in [expectation, reversedExpectation]
+                [expectedLatitude, expectedLongitude] = currentExpectation.result
+                for format in currentExpectation.formats
+                    [latitude, longitude] = parser.fromString(format)
 
-                try
-                    expect(latitude).to.be.closeTo(expectedLatitude, 0.01)
-                    expect(longitude).to.be.closeTo(expectedLongitude, 0.01)
-                catch error
-                    console.log('Failed ', format)
-                    console.log([latitude, longitude])
-                    throw error
+                    try
+                        expect(latitude).to.be.closeTo(expectedLatitude, 0.01)
+                        expect(longitude).to.be.closeTo(expectedLongitude, 0.01)
+                    catch error
+                        console.log('Failed ', format)
+                        console.log([latitude, longitude])
+                        throw error
+            
         
-    
+    describe "isValid(coordinates)", ->
+        it "returns 'true' for valid coordinates strings, otherwise false", ->
+            parser = new Parser
+            for currentExpectation in [expectation, reversedExpectation]
+                for format in currentExpectation.formats
+                    isValid = parser.isValid(format)
+                    try
+                        expect(isValid).to.be.ok
+                    catch error
+                        console.log("Failed on correct format '#{format}'")
+                        throw error
+
+            for format in invalidFormats
+                isValid = parser.isValid(format)
+                try
+                    expect(isValid).to.not.be.ok
+                catch error
+                    console.log("Failed on invalid format '#{format}'")
+                    throw error
+            
+        

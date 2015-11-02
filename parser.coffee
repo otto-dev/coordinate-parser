@@ -1,14 +1,6 @@
 class Parser
-    fromString: (coordinatesString) ->
-        coordinatesParts = coordinatesString.match(/-?\d+(\.\d+)?/g)
-        isUnevenParts = coordinatesParts.length % 2
-        if isUnevenParts
-            throw new Error('Uneven count of latitude/longitude numbers')
-        if coordinatesParts.lenght is 0
-            throw new Error('Could not find any coordinate number')
-        if coordinatesParts.lenght > 6
-            throw new Error('Too many coordinate numbers')
-
+    fromString: (coordinates) ->
+        coordinatesParts = coordinates.match(/-?\d+(\.\d+)?/g)
         coordinatePartCount = coordinatesParts.length / 2
         latitudeParts = coordinatesParts[0...coordinatePartCount]
         longitudeParts = coordinatesParts[(0 - coordinatePartCount)..]
@@ -16,8 +8,8 @@ class Parser
         longitude = @partsToDecimal(longitudeParts)
 
 
-        latitudeIsNegative = coordinatesString.match(/s|S/)
-        longitudeIsNegative = coordinatesString.match(/w|W/)
+        latitudeIsNegative = coordinates.match(/s|S/)
+        longitudeIsNegative = coordinates.match(/w|W/)
         if latitudeIsNegative
             latitude = latitude * -1
         if longitudeIsNegative
@@ -30,7 +22,6 @@ class Parser
         minutes ?= 0
         seconds ?= 0
         milliseconds = 0
-
 
         sign = Math.sign(degrees)
         degrees = Math.abs(degrees)
@@ -51,5 +42,34 @@ class Parser
 
         decimalCoordinate = sign * (degrees + minutes / 60 + seconds / 3600 + milliseconds / 3600000)
         return decimalCoordinate
+
+
+    isValid: (coordinates) ->
+        isValid = yes
+        try
+            @validate(coordinates)
+            return isValid
+        catch validationError
+            isValid = no
+            return isValid
+
+
+    validate: (coordinates) ->
+        coordinatesParts = coordinates.match(/-?\d+(\.\d+)?/g)
+        isUnevenParts = coordinatesParts.length % 2
+        containsLetters = /(?![neswd])[a-z]/i.test(coordinates)
+        validOrientation = /^[^nsew]*[ns]?[^nsew]*[ew]?[^nsew]*$/i.test(coordinates)
+        if containsLetters
+            throw new Error('Coordinate contains invalid alphanumeric characters.')
+        if not validOrientation
+            throw new Error('Invalid cardinal direction.')
+        if isUnevenParts
+            throw new Error('Uneven count of latitude/longitude numbers')
+        if coordinatesParts.length is 0
+            throw new Error('Could not find any coordinate number')
+        if coordinatesParts.length > 6
+            throw new Error('Too many coordinate numbers')
+
+
 
 module.exports = Parser
