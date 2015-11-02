@@ -89,8 +89,8 @@ describe "Parser", ->
                     longitude = coordinates.getLongitude()
 
                     try
-                        expect(latitude).to.be.closeTo(expectedLatitude, 0.01)
-                        expect(longitude).to.be.closeTo(expectedLongitude, 0.01)
+                        expect(latitude).to.be.closeTo(expectedLatitude, 0.001)
+                        expect(longitude).to.be.closeTo(expectedLongitude, 0.001)
                     catch error
                         console.log('Failed ', format)
                         console.log([latitude, longitude])
