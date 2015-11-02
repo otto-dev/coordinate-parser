@@ -1,4 +1,5 @@
-Parser = require('../parser.coffee')
+ParsedCoordinates = require('../parser.coffee')
+Validator = require('../validator.coffee')
 expect = require('chai').expect
 
 expectation =
@@ -76,15 +77,15 @@ invalidFormats = [
 ]
 
 describe "Parser", ->
-    describe "fromString(coordinates)", ->
+    describe "parse(coordinates)", ->
             
         it "converts strings correctly to decimal latitude/longitude", ->
-            parser = new Parser
-
             for currentExpectation in [expectation, reversedExpectation]
                 [expectedLatitude, expectedLongitude] = currentExpectation.result
                 for format in currentExpectation.formats
-                    [latitude, longitude] = parser.fromString(format)
+                    coordinates = new ParsedCoordinates(format)
+                    latitude = coordinates.getLatitude()
+                    longitude = coordinates.getLongitude()
 
                     try
                         expect(latitude).to.be.closeTo(expectedLatitude, 0.01)
@@ -93,14 +94,19 @@ describe "Parser", ->
                         console.log('Failed ', format)
                         console.log([latitude, longitude])
                         throw error
+
+        it "throws on for invalid coordinates", ->
+            expect(-> new ParsedCoordinates('1 2 3')).to.throw()
+            expect(-> new ParsedCoordinates('1E 3W')).to.throw()
             
-        
+
+describe "Validator", ->
     describe "isValid(coordinates)", ->
         it "returns 'true' for valid coordinates strings, otherwise false", ->
-            parser = new Parser
+            validator = new Validator
             for currentExpectation in [expectation, reversedExpectation]
                 for format in currentExpectation.formats
-                    isValid = parser.isValid(format)
+                    isValid = validator.isValid(format)
                     try
                         expect(isValid).to.be.ok
                     catch error
@@ -108,7 +114,7 @@ describe "Parser", ->
                         throw error
 
             for format in invalidFormats
-                isValid = parser.isValid(format)
+                isValid = validator.isValid(format)
                 try
                     expect(isValid).to.not.be.ok
                 catch error
