@@ -2,7 +2,7 @@ Validator = require('./validator')
 CoordinateNumber = require('./coordinate-number')
 
 
-class ParsedCoordinates
+class Coordinates
     constructor: (coordinateString)->
         @coordinates = coordinateString
         @latitudeNumbers = null
@@ -72,4 +72,4 @@ class ParsedCoordinates
         return @longitude
 
 
-module.exports = ParsedCoordinates
+module.exports = Coordinates
