@@ -1,5 +1,5 @@
-ParsedCoordinates = require('../parser.coffee')
-Validator = require('../validator.coffee')
+Coordinates = require('../src/coordinates')
+Validator = require('../src/validator')
 expect = require('chai').expect
 
 expectation =
@@ -84,7 +84,7 @@ describe "Parser", ->
             for currentExpectation in [expectation, reversedExpectation]
                 [expectedLatitude, expectedLongitude] = currentExpectation.result
                 for format in currentExpectation.formats
-                    coordinates = new ParsedCoordinates(format)
+                    coordinates = new Coordinates(format)
                     latitude = coordinates.getLatitude()
                     longitude = coordinates.getLongitude()
 
@@ -97,8 +97,8 @@ describe "Parser", ->
                         throw error
 
         it "throws on for invalid coordinates", ->
-            expect(-> new ParsedCoordinates('1 2 3')).to.throw()
-            expect(-> new ParsedCoordinates('1E 3W')).to.throw()
+            expect(-> new Coordinates('1 2 3')).to.throw()
+            expect(-> new Coordinates('1E 3W')).to.throw()
             
 
 describe "Validator", ->

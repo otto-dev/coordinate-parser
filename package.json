@@ -2,8 +2,9 @@
   "name": "coordinate-parser",
   "version": "1.0.0",
   "description": "Coordinate string parser",
-  "main": "index.coffee",
+  "main": "coordinates.js",
   "scripts": {
+    "preversion": "make build",
     "test": "make test"
   },
   "repository": {
