@@ -1,7 +1,7 @@
 {
   "name": "coordinate-parser",
   "version": "1.0.0",
-  "description": "Coordinate string parser",
+  "description": "Geographical coordinate parser",
   "main": "coordinates.js",
   "scripts": {
     "preversion": "make build",
@@ -9,10 +9,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://git.weprog.com/ig/coordinate-parser.git"
+    "url": "https://github.com/servant-of-god/coordinate-parser.git"
   },
-  "author": "WEPROG",
-  "license": "UNLICENSED",
+  "author": "SoG",
+  "license": "SEE LICENSE IN README.md",
   "devDependencies": {
     "chai": "^3.4.0"
   }
