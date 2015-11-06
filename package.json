@@ -1,7 +1,7 @@
 {
   "name": "coordinate-parser",
   "version": "1.0.0",
-  "description": "Coordinate string parser",
+  "description": "Geographical coordinate parser",
   "main": "coordinates.js",
   "scripts": {
     "preversion": "make build",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://git.weprog.com/ig/coordinate-parser.git"
+    "url": "https://github.com/otto-dev/coordinate-parser.git"
   },
   "author": "WEPROG/otto-dev",
   "license": "Apache-2.0",
