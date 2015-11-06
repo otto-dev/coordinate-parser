@@ -1,6 +1,16 @@
-# Coordinates
-## * Intelligent coordinate parser in JavaScript*
-Flexible algorithm to parse geographical coordinates from various latitude/longitude formats.
+# Coordinate Parser
+## *Intelligent geographical coordinate parser in JavaScript*
+Flexible algorithm to parse strings containing various latitude/longitude formats.
+
+### Usage
+```js
+Coordinates = require('coordinate-parser');
+
+position = new Coordinates('40:7:22.8N 74:7:22.8W');
+
+latitude = position.getLatitude(); // 40.123 ✓
+longitude = position.getLongitude(); // -74.123 ✓
+```
 
 ### Supported formats
 - `40.123, -74.123`
@@ -26,32 +36,27 @@ Flexible algorithm to parse geographical coordinates from various latitude/longi
 - `40.123N 74.123W`
 - `40° 7.38, -74° 7.38`
 
-and others. Includes "exotic" formats such as
+... and others that follow a similar pattern.
+
+Handles also the following "exotic" formats:
 
 - `145505994.48, -268708007.88` (*geographical milliseconds*)
 - `4025.0999N7438.4668W` (*DDMM.xxxx*)
 - `402505.994N743828.008W` (*DDMMSS.xxxx*)
 
-### Usage
-```js
-Coordinates = require('coordinates');
-
-position = new Coordinates('40.123N 74.123W');
-
-latitude = position.getLatitude(); // 40.123
-longitude = position.getLongitude(); // -74.123
-```
-
 ### Coordinate validation
-The parser will detect invalid formats such as `40.123N foo 74.123W` (invalid characters), `40.123W 74.123N` (latitude/longitude exchanged) and `40.123 12.345 74.123` (odd numbers).
+Input that does not resemble valid coordinates will throw an error.
 
-If the supplied position is invalid, the library will throw an error.
+The parser will detect invalid formats such as `40.123N FOOBAR 74.123W` (invalid characters), `40.123W 74.123N` (latitude/longitude exchanged) and `40.12  12.34  74.12` (odd numbers).
+
+Flexibility towards non-alphanumeric characters and whitespaces is maintained.
 
 ```js
-isValid = function(position) {
+isValidPosition = function(position) {
   var error;
-  isValid = true;
+  var isValid;
   try {
+    isValid = true;
     new Coordinates(position);
     return isValid;
   } catch (error) {
@@ -59,6 +64,9 @@ isValid = function(position) {
     return isValid;
   }
 };
+
+isCoordinate = isValidPosition('40:7:22.8N 74:7:22.8W'); // true
+isCoordinate = isValidPosition('40.123 FOOBAR! 74.123'); // false
 ```
 
 ### Licence
