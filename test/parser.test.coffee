@@ -57,6 +57,10 @@ reversedExpectation =
         "-40° 25.0999, 74° 38.4668"
     ]
 
+samples =
+    "55° 22' 33.6\" N, 12° 1' 55.2\" E": [(55 + 22 / 60 + 33.6 / 3600), (12 + 1 / 60  + 55.2 / 3600)]
+
+
 invalidFormats = [
     "blablabla"
     "5 Fantasy street 12"
@@ -77,9 +81,10 @@ invalidFormats = [
     "-40.4183318, 12.345, 74.6411133"
 ]
 
+
 describe "Parser", ->
-    describe "parse(coordinates)", ->
             
+    context "various formats", ->
         it "converts strings correctly to decimal latitude/longitude", ->
             for currentExpectation in [expectation, reversedExpectation]
                 [expectedLatitude, expectedLongitude] = currentExpectation.result
@@ -96,9 +101,35 @@ describe "Parser", ->
                         console.log([latitude, longitude])
                         throw error
 
-        it "throws on for invalid coordinates", ->
-            expect(-> new Coordinates('1 2 3')).to.throw()
-            expect(-> new Coordinates('1E 3W')).to.throw()
+    context "samples", ->
+        it "converts strings correctly to decimal latitude/longitude", ->
+            for format, expectedCoordinates in samples
+                coordinates = new Coordinates(format)
+                latitude = coordinates.getLatitude()
+                longitude = coordinates.getLongitude()
+                expectedNumber = degree + minute / 60 + second / 3600
+                expect(latitude).to.be.closeTo(expectedCoordinates[0], 0.001)
+                expect(longitude).to.be.closeTo(expectedCoordinates[1], 0.001)
+
+
+    context "generated sequences", ->
+        it "converts strings correctly to decimal latitude/longitude", ->
+            stepSize = Math.PI * 3
+            for degree in [0..90] by stepSize
+                for minute in [0..90] by stepSize
+                    for second in [0..90] by stepSize
+                        format = "#{degree} #{minute} #{second}, #{degree} #{minute} #{second}"
+                        coordinates = new Coordinates(format)
+                        latitude = coordinates.getLatitude()
+                        longitude = coordinates.getLongitude()
+                        expectedNumber = degree + minute / 60 + second / 3600
+                        expect(latitude).to.be.closeTo(expectedNumber, 0.001)
+                        expect(longitude).to.be.closeTo(expectedNumber, 0.001)
+
+
+    it "throws on for invalid coordinates", ->
+        expect(-> new Coordinates('1 2 3')).to.throw()
+        expect(-> new Coordinates('1E 3W')).to.throw()
             
 
 describe "Validator", ->

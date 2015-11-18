@@ -2,7 +2,7 @@ class CoordinateNumber
     constructor: (coordinateNumbers) ->
         coordinateNumbers = @normalizeCoordinateNumbers(coordinateNumbers)
         [@degrees, @minutes, @seconds, @milliseconds] = coordinateNumbers
-        @sign = Math.sign(@degrees)
+        @sign = @normalizedSignOf(@degrees)
         @degrees = Math.abs(@degrees)
 
 
@@ -11,6 +11,13 @@ class CoordinateNumber
         for currentNumber, i in coordinateNumbers
             normalizedNumbers[i] = parseFloat(currentNumber)
         return normalizedNumbers
+
+    normalizedSignOf: (number) ->
+        sign = Math.sign(number)
+        if sign isnt -1
+            sign = 1
+        return sign
+
 
 
     detectSpecialFormats: ->
@@ -74,6 +81,7 @@ class CoordinateNumber
 
     toDecimal: ->
         decimalCoordinate = @sign * (@degrees + @minutes / 60 + @seconds / 3600 + @milliseconds / 3600000)
+        return decimalCoordinate
 
 
 module.exports = CoordinateNumber
