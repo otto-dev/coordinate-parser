@@ -5,7 +5,7 @@ CoordinateNumber = (function() {
   function CoordinateNumber(coordinateNumbers) {
     coordinateNumbers = this.normalizeCoordinateNumbers(coordinateNumbers);
     this.degrees = coordinateNumbers[0], this.minutes = coordinateNumbers[1], this.seconds = coordinateNumbers[2], this.milliseconds = coordinateNumbers[3];
-    this.sign = Math.sign(this.degrees);
+    this.sign = this.normalizedSignOf(this.degrees);
     this.degrees = Math.abs(this.degrees);
   }
 
@@ -17,6 +17,15 @@ CoordinateNumber = (function() {
       normalizedNumbers[i] = parseFloat(currentNumber);
     }
     return normalizedNumbers;
+  };
+
+  CoordinateNumber.prototype.normalizedSignOf = function(number) {
+    var sign;
+    sign = Math.sign(number);
+    if (sign !== -1) {
+      sign = 1;
+    }
+    return sign;
   };
 
   CoordinateNumber.prototype.detectSpecialFormats = function() {
@@ -92,7 +101,8 @@ CoordinateNumber = (function() {
 
   CoordinateNumber.prototype.toDecimal = function() {
     var decimalCoordinate;
-    return decimalCoordinate = this.sign * (this.degrees + this.minutes / 60 + this.seconds / 3600 + this.milliseconds / 3600000);
+    decimalCoordinate = this.sign * (this.degrees + this.minutes / 60 + this.seconds / 3600 + this.milliseconds / 3600000);
+    return decimalCoordinate;
   };
 
   return CoordinateNumber;
