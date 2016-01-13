@@ -1,3 +1,7 @@
+## [1.0.2] - 2016-01-13
+### Changed
+- Do not require presence of Math.sign()
+
 ## [1.0.1] - 2015-11-19
 ### Fixed
 - Allow degree part of latitude/longitude to be zero
