@@ -13,12 +13,7 @@ class CoordinateNumber
         return normalizedNumbers
 
     normalizedSignOf: (number) ->
-        sign = Math.sign(number)
-        if sign isnt -1
-            sign = 1
-        return sign
-
-
+        return if (number >= 0) then 1 else -1
 
     detectSpecialFormats: ->
         if @degreesCanBeSpecial()
