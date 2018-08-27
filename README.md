@@ -1,12 +1,20 @@
 # Coordinate Parser
 ## *Intelligent geographical coordinate parser in JavaScript*
-Flexible algorithm to parse strings containing various latitude/longitude formats.
+Flexible algorithm to parse strings containing various latitude/longitude or longitude/latitude formats.
 
 ### Usage
 ```js
 Coordinates = require('coordinate-parser');
 
 position = new Coordinates('40:7:22.8N 74:7:22.8W');
+
+latitude = position.getLatitude(); // 40.123 ✓
+longitude = position.getLongitude(); // -74.123 ✓
+
+// passing true as the second argument tells our parser
+// to assume the string contains longitude as the first
+// value and latitude as the second
+position = new Coordinates('74:7:22.8W 40:7:22.8N', true);
 
 latitude = position.getLatitude(); // 40.123 ✓
 longitude = position.getLongitude(); // -74.123 ✓

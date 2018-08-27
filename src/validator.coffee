@@ -1,17 +1,17 @@
 class Validator
-    isValid: (coordinates) ->
+    isValid: (coordinates, lonLatFormat) ->
         isValid = yes
         try
-            @validate(coordinates)
+            @validate(coordinates, lonLatFormat)
             return isValid
         catch validationError
             isValid = no
             return isValid
 
 
-    validate: (coordinates) ->
+    validate: (coordinates, lonLatFormat) ->
         @checkContainsNoLetters(coordinates)
-        @checkValidOrientation(coordinates)
+        @checkValidOrientation(coordinates, lonLatFormat)
         @checkNumbers(coordinates)
 
 
@@ -20,12 +20,10 @@ class Validator
         if containsLetters
             throw new Error('Coordinate contains invalid alphanumeric characters.')
 
-
-    checkValidOrientation: (coordinates) ->
-        validOrientation = /^[^nsew]*[ns]?[^nsew]*[ew]?[^nsew]*$/i.test(coordinates)
+    checkValidOrientation: (coordinates, lonLatFormat) ->
+        validOrientation = if lonLatFormat then /^[^nsew]*[ew]?[^nsew]*[ns]?[^nsew]*$/i.test(coordinates) else /^[^nsew]*[ns]?[^nsew]*[ew]?[^nsew]*$/i.test(coordinates)
         if not validOrientation
             throw new Error('Invalid cardinal direction.')
-
 
     checkNumbers: (coordinates) ->
         coordinateNumbers = coordinates.match(/-?\d+(\.\d+)?/g)
@@ -48,6 +46,6 @@ class Validator
     checkMaximumCoordinateNumbers: (coordinateNumbers) ->
         if coordinateNumbers.length > 6
             throw new Error('Too many coordinate numbers')
-    
+
 
 module.exports = Validator

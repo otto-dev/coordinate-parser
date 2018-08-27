@@ -3,17 +3,18 @@ CoordinateNumber = require('./coordinate-number')
 
 
 class Coordinates
-    constructor: (coordinateString)->
+    constructor: (coordinateString, lonLatFormat)->
         @coordinates = coordinateString
         @latitudeNumbers = null
         @longitudeNumbers = null
+        @lonLatFormat = lonLatFormat;
         @validate()
         @parse()
 
 
     validate: ()->
         validator = new Validator
-        validator.validate(@coordinates)
+        validator.validate(@coordinates, @lonLatFormat)
 
 
     parse: ->
@@ -25,8 +26,8 @@ class Coordinates
     groupCoordinateNumbers: () ->
         coordinateNumbers = @extractCoordinateNumbers(@coordinates)
         numberCountEachCoordinate = coordinateNumbers.length / 2
-        @latitudeNumbers = coordinateNumbers[0...numberCountEachCoordinate]
-        @longitudeNumbers = coordinateNumbers[(0 - numberCountEachCoordinate)..]
+        @latitudeNumbers = if @lonLatFormat then coordinateNumbers[(0 - numberCountEachCoordinate)..] else coordinateNumbers[0...numberCountEachCoordinate]
+        @longitudeNumbers = if @lonLatFormat then coordinateNumbers[0...numberCountEachCoordinate] else coordinateNumbers[(0 - numberCountEachCoordinate)..]
 
 
     extractCoordinateNumbers: (coordinates) ->

@@ -1,3 +1,7 @@
+## [1.0.3] - 2018-08-27
+### Changed
+- Allow parsing of strings with longitude as first value and latitude as the second value
+
 ## [1.0.2] - 2016-01-13
 ### Changed
 - Do not require presence of Math.sign()

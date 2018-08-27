@@ -30,7 +30,7 @@ expectation =
     ]
 
 reversedExpectation =
-    result: [-40.4183318,74.6411133]
+    result: [-40.4183318, 74.6411133]
     formats: [
         "-40.4183318, 74.6411133"
         "40.4183318° S 74.6411133° E"
@@ -57,9 +57,66 @@ reversedExpectation =
         "-40° 25.0999, 74° 38.4668"
     ]
 
+lonLatExpectation =
+    result: [-74.6411133, 40.4183318]
+    formats: [
+        "-74.6411133, 40.4183318"
+        "74.6411133° W, 40.4183318° N"
+        "74° 38´ 28.008\" W 40° 25´ 5.994\" N "
+        "-74° 38.4668’, 40° 25.0999’ "
+        "W74°38’28.008\" N40°25’5.994"
+        "74°38’28.008\"W, 40°25’5.994\"N"
+        "-74 38 28.008, 40 25 5.994"
+        "-74.6411133, 40.4183318"
+        "-74.6411133°, 40.4183318°"
+        "-268708007.88, 145505994.48"
+        "74.6411133W40.4183318N"
+        "7438.4668W4025.0999N"
+        "74°38’28.008\"W, 40°25’5.994\"N"
+        "743828.008W402505.994N"
+        "W 74 38.4668    N 40 25.0999"
+        "74:38:28W,40:25:6N"
+        "74:38:28.008W 40:25:5.994N"
+        "74°38’28\"W 40°25’6\"N"
+        "-74°38’28\" 40°25’6\""
+        "74d 38’ 28\" W 40d 25’ 6\" N"
+        "74.6411133W 40.4183318N"
+        "-74° 38.4668, 40° 25.0999"
+    ]
+
+reversedLonLatExpectation =
+    result: [74.6411133, -40.4183318]
+    formats: [
+        "74.6411133, -40.4183318"
+        "74.6411133° E 40.4183318° S"
+        "74° 38´ 28.008\" E, 40° 25´ 5.994\" S"
+        "74° 38.4668’, -40° 25.0999’"
+        "E74°38’28.008\", S40°25’5.994"
+        "74°38’28.008\"E, 40°25’5.994\"S"
+        "74 38 28.008, -40 25 5.994"
+        "74.6411133 -40.4183318"
+        "74.6411133°, -40.4183318°"
+        "268708007.88, -145505994.48"
+        "74.6411133E40.4183318S"
+        "7438.4668E4025.0999S"
+        "74°38’28.008\"E, 40°25’5.994\"S"
+        "743828.008E402505.994S"
+        "E 74 38.4668    S 40 25.0999"
+        "74:38:28E,40:25:6S"
+        "74:38:28.008E 40:25:5.994S"
+        "74°38’28\"E 40°25’6\"S"
+        "74°38’28\" -40°25’6\""
+        "74d 38’ 28\" E 40d 25’ 6\" S"
+        "74.6411133E 40.4183318S"
+        "74.6411133 40.4183318S "
+        "74° 38.4668, -40° 25.0999"
+    ]
+
 samples =
     "55° 22' 33.6\" N, 12° 1' 55.2\" E": [(55 + 22 / 60 + 33.6 / 3600), (12 + 1 / 60  + 55.2 / 3600)]
 
+lonLatSamples =
+    "12° 1' 55.2\" E, 55° 22' 33.6\" N": [(12 + 1 / 60  + 55.2 / 3600), (55 + 22 / 60 + 33.6 / 3600)]
 
 invalidFormats = [
     "blablabla"
@@ -83,13 +140,29 @@ invalidFormats = [
 
 
 describe "Parser", ->
-            
+
     context "various formats", ->
         it "converts strings correctly to decimal latitude/longitude", ->
             for currentExpectation in [expectation, reversedExpectation]
                 [expectedLatitude, expectedLongitude] = currentExpectation.result
                 for format in currentExpectation.formats
                     coordinates = new Coordinates(format)
+                    latitude = coordinates.getLatitude()
+                    longitude = coordinates.getLongitude()
+
+                    try
+                        expect(latitude).to.be.closeTo(expectedLatitude, 0.001)
+                        expect(longitude).to.be.closeTo(expectedLongitude, 0.001)
+                    catch error
+                        console.log('Failed ', format)
+                        console.log([latitude, longitude])
+                        throw error
+
+        it "converts strings correctly to decimal longitude/latitude", ->
+            for currentExpectation in [lonLatExpectation, reversedLonLatExpectation]
+                [expectedLongitude, expectedLatitude] = currentExpectation.result
+                for format in currentExpectation.formats
+                    coordinates = new Coordinates(format, true)
                     latitude = coordinates.getLatitude()
                     longitude = coordinates.getLongitude()
 
@@ -111,6 +184,15 @@ describe "Parser", ->
                 expect(latitude).to.be.closeTo(expectedCoordinates[0], 0.001)
                 expect(longitude).to.be.closeTo(expectedCoordinates[1], 0.001)
 
+        it "converts strings correctly to decimal longitude/latitude", ->
+            for format, expectedCoordinates in lonLatSamples
+                coordinates = new Coordinates(format, true)
+                latitude = coordinates.getLatitude()
+                longitude = coordinates.getLongitude()
+                expectedNumber = degree + minute / 60 + second / 3600
+                expect(latitude).to.be.closeTo(expectedCoordinates[0], 0.001)
+                expect(longitude).to.be.closeTo(expectedCoordinates[1], 0.001)
+
 
     context "generated sequences", ->
         it "converts strings correctly to decimal latitude/longitude", ->
@@ -126,11 +208,24 @@ describe "Parser", ->
                         expect(latitude).to.be.closeTo(expectedNumber, 0.001)
                         expect(longitude).to.be.closeTo(expectedNumber, 0.001)
 
+        it "converts strings correctly to decimal longitude/latitude", ->
+            stepSize = Math.PI * 3
+            for degree in [0..90] by stepSize
+                for minute in [0..90] by stepSize
+                    for second in [0..90] by stepSize
+                        format = "#{degree} #{minute} #{second}, #{degree} #{minute} #{second}"
+                        coordinates = new Coordinates(format, true)
+                        latitude = coordinates.getLatitude()
+                        longitude = coordinates.getLongitude()
+                        expectedNumber = degree + minute / 60 + second / 3600
+                        expect(latitude).to.be.closeTo(expectedNumber, 0.001)
+                        expect(longitude).to.be.closeTo(expectedNumber, 0.001)
+
 
     it "throws on for invalid coordinates", ->
         expect(-> new Coordinates('1 2 3')).to.throw()
         expect(-> new Coordinates('1E 3W')).to.throw()
-            
+
 
 describe "Validator", ->
     describe "isValid(coordinates)", ->
@@ -145,6 +240,15 @@ describe "Validator", ->
                         console.log("Failed on correct format '#{format}'")
                         throw error
 
+            for currentLonLatExpectation in [lonLatExpectation, reversedLonLatExpectation]
+                for format in currentLonLatExpectation.formats
+                    isValid = validator.isValid(format, true)
+                    try
+                        expect(isValid).to.be.ok
+                    catch error
+                        console.log("Failed on correct format '#{format}'")
+                        throw error
+
             for format in invalidFormats
                 isValid = validator.isValid(format)
                 try
@@ -152,5 +256,3 @@ describe "Validator", ->
                 catch error
                     console.log("Failed on invalid format '#{format}'")
                     throw error
-            
-        
