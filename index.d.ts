@@ -1,10 +1,9 @@
 declare module 'coordinate-parser' {
-    class CoordinateParser {
+    class Coordinates {
         constructor(coordinateString: string)
         getLatitude(): number
         getLongitude(): number
-        isValidPosition(): boolean
     }
 
-    export default CoordinateParser
+    export default Coordinates
 }
