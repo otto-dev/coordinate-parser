@@ -1,6 +1,6 @@
 {
   "name": "coordinate-parser",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Geographical coordinate parser",
   "main": "coordinates.js",
   "scripts": {
