@@ -31,8 +31,7 @@ class Coordinates
 
     extractCoordinateNumbers: (coordinates) ->
         return coordinates.match(/-?\d+(\.\d+)?/g)
-
-
+    
     extractLatitude: ->
         latitude = @coordinateNumbersToDecimal(@latitudeNumbers)
         if @latitudeIsNegative()
