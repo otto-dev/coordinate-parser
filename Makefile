@@ -7,5 +7,5 @@ test:
 	@nodemon --exec "make test-once --quiet" --ext "coffee,js" --quiet
 
 test-once:
-	@mocha ---require coffeescript/register --ext "coffee,js"
+	@mocha --require coffeescript/register --ext "coffee,js" 'test/**/*.coffee'
 

@@ -10,15 +10,20 @@ class Validator
 
 
     validate: (coordinates) ->
-        @checkContainsNoLetters(coordinates)
-        @checkValidOrientation(coordinates)
-        @checkNumbers(coordinates)
+        cleaned = @removeKnownStrings(coordinates)
+        @checkContainsNoLetters(cleaned)
+        @checkValidOrientation(cleaned)
+        @checkNumbers(cleaned)
 
 
     checkContainsNoLetters: (coordinates) ->
         containsLetters = /(?![neswd])[a-z]/i.test(coordinates)
         if containsLetters
             throw new Error('Coordinate contains invalid alphanumeric characters.')
+
+
+    removeKnownStrings: (coordinates) ->
+        coordinates.replace(/\bdeg\b/gi, '')
 
 
     checkValidOrientation: (coordinates) ->
