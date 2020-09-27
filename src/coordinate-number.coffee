@@ -1,10 +1,8 @@
 class CoordinateNumber
     constructor: (coordinateNumbers) ->
         coordinateNumbers = @normalizeCoordinateNumbers(coordinateNumbers)
-        [@degrees, @minutes, @seconds, @milliseconds] = coordinateNumbers
-        @sign = @normalizedSignOf(@degrees)
-        @degrees = Math.abs(@degrees)
-
+        @sign = @normalizedSignOf(coordinateNumbers[0])
+        [@degrees, @minutes, @seconds, @milliseconds] = coordinateNumbers.map(Math.abs)
 
     normalizeCoordinateNumbers: (coordinateNumbers) ->
         normalizedNumbers = [0, 0, 0, 0]
